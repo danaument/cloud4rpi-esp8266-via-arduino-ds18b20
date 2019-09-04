@@ -1,21 +1,25 @@
-#include <ESP8266WiFi.h>
+#ifdef ESP8266
+    #include <ESP8266WiFi.h>
+#else
+    #include <WiFi.h>
+#endif
 #include <Cloud4RPi.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-const String deviceToken = "xxxxx";
-char wifiSSID[] = "xxxxx";
-char wifiPassword[] = "xxxxx";
+const String deviceToken = "4u1afTJETrowsjm7W8crVLB2N";
+char wifiSSID[] = "Internet Spaceships Uplink";
+char wifiPassword[] = "LucyGoosey";
 
-#define SERIAL_BAUD_RATE 9600 // bits per second
+#define SERIAL_BAUD_RATE 115200 // bits per second
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2
 #endif
 
 // Decrease this value for testing purposes.
-const int dataSendingInterval = 300000; // milliseconds
-const int diagSendingInterval = 60000; // milliseconds
+const int dataSendingInterval = 10000; // milliseconds
+const int diagSendingInterval = 50000; // milliseconds
 unsigned long lastDataSent = 0;
 unsigned long lastDiagSent = 0;
 
@@ -40,6 +44,7 @@ DallasTemperature sensors(&oneWire);
 
 void setup() {
     Serial.begin(SERIAL_BAUD_RATE);
+    sensors.begin();
     ensureWiFiConnection();
 
     pinMode(LED_BUILTIN, OUTPUT);
@@ -53,6 +58,7 @@ void setup() {
     c4r.declareNumericVariable("Uptime");
     c4r.declareNumericVariable("SensorTemp");
     c4r.declareStringVariable("State");
+    c4r.declareStringVariable("State");
     c4r.declareNumericVariable("DesiredTemp", onDesiredTempCommand);
     c4r.setVariable("DesiredTemp", 22.5f);
 
@@ -60,9 +66,6 @@ void setup() {
 
     c4r.declareDiagVariable("IP Address");
     c4r.declareDiagVariable("RSSI"); // WiFi signal strength
-
-    Serial.begin(115200);
-    sensors.begin();
 
     c4r.loop();
     delay(1000);
@@ -82,7 +85,7 @@ void loop() {
             Serial.println("ºC");
             Serial.print(temperatureF);
             Serial.println("ºF");
-            
+          
             Serial.println();
             c4r.setVariable("Uptime", currentMillis / 1000);
             c4r.setVariable("SensorTemp", temperatureF);
