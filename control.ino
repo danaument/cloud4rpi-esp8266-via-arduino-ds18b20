@@ -7,9 +7,9 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-const String deviceToken = "4u1afTJETrowsjm7W8crVLB2N";
-char wifiSSID[] = "Internet Spaceships Uplink";
-char wifiPassword[] = "LucyGoosey";
+const String deviceToken = "xxxxx";
+char wifiSSID[] = "xxxxx";
+char wifiPassword[] = "xxxx";
 
 #define SERIAL_BAUD_RATE 115200 // bits per second
 
